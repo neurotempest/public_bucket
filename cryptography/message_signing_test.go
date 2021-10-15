@@ -16,7 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 )
 
-func TestSignAndVerify_BCH(t *testing.T) {
+func TestSignAndVerify_BCH_p2pkh_address(t *testing.T) {
 	pkBytes := []byte("some random string of chars... this is probably a weak private key seed")
 
 	privKey, pubKey := btcec.PrivKeyFromBytes(btcec.S256(), pkBytes)
@@ -48,6 +48,45 @@ func TestSignAndVerify_BCH(t *testing.T) {
 	require.NoError(t, err)
 
 	recoveredAddress := rawRecoveredAddress.EncodeAddress()
+
+	fmt.Println("Recovered address", recoveredAddress)
+
+	require.True(t, address==recoveredAddress, "Message verification failed")
+}
+
+func TestSignAndVerify_BCH_segwit_address(t *testing.T) {
+	pkBytes := []byte("some random string of chars... this is probably a weak private key seed")
+
+	privKey, pubKey := btcec.PrivKeyFromBytes(btcec.S256(), pkBytes)
+
+	witnessProg := btcutil.Hash160(pubKey.SerializeCompressed())
+	addressWitnessPubKeyHash, err := btcutil.NewAddressWitnessPubKeyHash(witnessProg, &chaincfg.MainNetParams)
+	require.NoError(t, err)
+	address := addressWitnessPubKeyHash.EncodeAddress()
+
+	fmt.Printf("PrivKey: %s\n", privKey.Serialize())
+	fmt.Printf("Segwit address: %s\n", address)
+
+	message := "some_message_to_sign"
+
+	signedBytes, err := btcec.SignCompact(btcec.S256(), privKey, []byte(message), true)
+	require.NoError(t, err)
+
+	signedMessage := base64.StdEncoding.EncodeToString(signedBytes)
+
+	fmt.Printf("signedMessage: %s\n", signedMessage)
+
+
+	decodedSignedMessage, err := base64.StdEncoding.DecodeString(signedMessage)
+	require.NoError(t, err)
+
+	recoveredPubKey, _, err := btcec.RecoverCompact(btcec.S256(), decodedSignedMessage, []byte(message))
+	require.NoError(t, err)
+
+	recoveredWitnessProg := btcutil.Hash160(recoveredPubKey.SerializeCompressed())
+	recoveredAddressWitnessPubKeyHash, err := btcutil.NewAddressWitnessPubKeyHash(recoveredWitnessProg, &chaincfg.MainNetParams)
+	require.NoError(t, err)
+	recoveredAddress := recoveredAddressWitnessPubKeyHash.EncodeAddress()
 
 	fmt.Println("Recovered address", recoveredAddress)
 
@@ -102,4 +141,12 @@ func TestSignAndVerify_ETH_using_go_ethereum(t *testing.T) {
 	fmt.Printf("recovered Address: %s\n", recoveredAddress.Hex())
 
 	require.True(t, address==recoveredAddress, "Message verification failed (using crypto.SigToPub)")
+}
+
+func TestSignAndVerify_ETH_using_btcec(t *testing.T) {
+
+	//privKey, pubKey := btcec.PrivKeyFromBytes(
+	//	btcec.S256(),
+	//	pkBytes,
+	//)
 }
