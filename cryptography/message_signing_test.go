@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"encoding/base64"
 	"testing"
-	"strings"
+	//"strings"
+	"crypto/rand"
 
+	"github.com/ebfe/keccak"
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
@@ -93,11 +95,22 @@ func TestSignAndVerify_BCH_segwit_address(t *testing.T) {
 	require.True(t, address==recoveredAddress, "Message verification failed")
 }
 
+const (
+	magicPrefix = "\x19Ethereum Signed Message:\n"
+)
+
+func magicHash(message string) ([]byte, error) {
+	msg := fmt.Sprintf("%s%d%s", magicPrefix, len(message), message)
+	h := keccak.New256()
+	h.Write([]byte(msg))
+	return h.Sum(nil), nil
+}
 
 func TestSignAndVerify_ETH_using_go_ethereum(t *testing.T) {
 	privKey, err := ecdsa.GenerateKey(
 		secp256k1.S256(),
-		strings.NewReader("some random string of chars... this is probably a weak private key seed"),
+		//strings.NewReader("some random other dfdsstring of chars... this is probably a weak private key seed other data"),
+		rand.Reader,
 	)
 	require.NoError(t, err)
 	fmt.Printf("PrivKey: %x\n", crypto.FromECDSA(privKey))
@@ -110,10 +123,13 @@ func TestSignAndVerify_ETH_using_go_ethereum(t *testing.T) {
 	address := crypto.PubkeyToAddress(*pubKeyECDSA)
 	fmt.Printf("Address: %s\n", address.Hex())
 
-	messageToSign := "some_message_to_sign"
+	//messageToSign := "\x19Ethereum Signed Message:\nsome_message_to_sign"
+	messageToSign, err := magicHash("some_other_message_to_sign")
+	require.NoError(t, err)
 
 	signature, err := crypto.Sign(
-		crypto.Keccak256([]byte(messageToSign)),
+		//crypto.Keccak256([]byte(messageToSign)),
+		messageToSign,
 		privKey,
 	)
 	require.NoError(t, err)
@@ -125,14 +141,16 @@ func TestSignAndVerify_ETH_using_go_ethereum(t *testing.T) {
 	sigWithoutVSuffix := signature[:len(signature)-1]
 	verified := crypto.VerifySignature(
 		crypto.FromECDSAPub(pubKeyECDSA),
-		crypto.Keccak256([]byte(messageToSign)),
+		//crypto.Keccak256([]byte(messageToSign)),
+		messageToSign,
 		sigWithoutVSuffix,
 	)
 	require.True(t, verified, "Message verification failed (using crypto.VerifySignature)")
 
 
 	recoveredPubKey, err := crypto.SigToPub(
-		crypto.Keccak256([]byte(messageToSign)),
+		//crypto.Keccak256([]byte(messageToSign)),
+		messageToSign,
 		signature,
 	)
 	require.NoError(t, err)
