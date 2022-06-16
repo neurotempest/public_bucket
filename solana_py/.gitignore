@@ -1,1 +1,3 @@
 secret.key
+*.log
+temp_blocks/
