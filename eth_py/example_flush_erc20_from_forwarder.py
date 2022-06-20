@@ -20,15 +20,18 @@ account = web3.eth.account.from_key(private_key)
 
 nonce = web3.eth.get_transaction_count(account.address)
 
+func_selector = web3.keccak(text='flushTokens(address)')[0:4].hex()
+token_address='0xFab46E002BbF0b4509813474841E0716E6730136'[2:].zfill(64)
+
 signed_tx = account.sign_transaction({
   'from': account.address,
-  'to': '0xa32C7edE7138E43867329D4aCE988335b4E5fC60',
+  'to': '0x180291d33F2fEaea01457b3d88A875543Cd3A662',
   'nonce': nonce,
-  'value': 100,
-  'gas': 21000,
-  'maxFeePerGas': web3.toWei(100, 'gwei'),
+  'gas': 80000,
+  'maxFeePerGas': web3.toWei(3, 'gwei'),
   'maxPriorityFeePerGas': web3.toWei(1, 'gwei'),
   'chainId': web3.eth.chain_id,
+  'data': func_selector + token_address,
 })
 
 tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)

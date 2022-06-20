@@ -25,3 +25,31 @@ Create a file `key_info.json` to store the keystore info, as well the URL path t
 ## To connect to ETH client:
 
 Suggest using `infura.io` - create an account and seutp a new project; they will then give you an endpoint to connect to an eth client.
+
+
+## Notes on example scripts:
+
+### Example deploy contract:
+
+Compile the contract with:
+
+```
+solc --bin path/to/contract.sol
+```
+
+This will output the raw hex of the compiled contract which should be put directly in the `data` field of the tx to deploy the contract.
+That tx should leave the `to` and `value` fields empty.
+
+### Example mint/transfer ERC20 tokens:
+
+These give examples of interacting with ERC20 token contracts.
+The `to` field of the transaction will be the ERC20 contract being interacted with and the `data` field contains info of which contract function to call, as well as the args to pass to it:
+
+The first 4 bytes indicate which contract function; it is found by taking the first4 bytes from the Keccak-256 hash of the function signature, e.g. `keccak('tranfer(address, uint256')[0:4]`.
+This is followed by the args (each having a lenght of 32 bytes - i.e. 64 characheter hex string)
+
+### Example flush erc20 tokens:
+
+Example of calling the `flushToken(address to)` method defined in the `contract/forwarder_with_erc20_flush.sol` contract.
+
+This will flush any existing Faucet token (`0xFab46E002BbF0b4509813474841E0716E6730136`) from this forwarder contract.
