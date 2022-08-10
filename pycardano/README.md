@@ -16,4 +16,5 @@ Rough steps to start sending some ADA txs using these scripts (note by default t
 
 4. `python3 send_tx.py`
 
-5. profit
+5. To register and delegate for staking, run staking.py script.
+    once registered, you can run query_rewards.py script to get the staking rewards listed :)
