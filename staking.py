@@ -27,7 +27,7 @@ stake_registration = StakeRegistration(stake_credential)
 pool_hash = PoolKeyHash(bytes.fromhex(POOL_ID))
 stake_delegation = StakeDelegation(stake_credential, pool_keyhash=pool_hash)
 
-builder.certificates = [stake_registration, take_delegation]
+builder.certificates = [stake_registration, stake_delegation]
 signed_tx = builder.build_and_sign(
     [ssk, psk],
     address,
