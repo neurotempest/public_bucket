@@ -10,7 +10,13 @@ airdrop funding if funding wallet has no SOL stored.
 After, it will create the staking account in SOL blockchain, if it does not exist, 
 and will try to delegate the staked amount to the firstf validator in the validator list.
 
-Install NodeJS and run
+* install Node.js (https://nodejs.org/en/download/package-manager/)
+
+$ cd solana-web3 folder and run 
+
+$ node install
+
+then run the app
 
 $ node ./
 
