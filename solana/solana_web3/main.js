@@ -69,7 +69,7 @@ async function delegateStaking(mainWallet, stakingWallet, authorisedWallet) {
         authorizedPubkey: authorisedWallet.publicKey,
         votePubkey: votePubkey,
     });
-    await console.log(web3.sendAndConfirmTransaction(connection, delegateTransaction, [mainWallet, authorisedWallet]));
+    console.log(await web3.sendAndConfirmTransaction(connection, delegateTransaction, [mainWallet, authorisedWallet]));
 
 }
 
@@ -78,23 +78,19 @@ async function delegateStaking(mainWallet, stakingWallet, authorisedWallet) {
 (async() => {
 
     let fromBalance = await getBalance(mainWallet);
+    let minForStakeAccount = (await connection.getMinimumBalanceForRentExemption(web3.StakeProgram.space))
+
     console.log(`Main wallet balance: ${fromBalance} lamports`)
-    if (fromBalance == 0) {
+    if (fromBalance < (minForStakeAccount+1000)) {
         prompt.start();
         console.log('Main wallet balance is zero. Want airdrop yes/no?');
         const result = await prompt.get(['answer'])
         if (result.answer.toLowerCase() == 'yes') {
-                requestAirdrop(mainWallet)
+                await requestAirdrop(mainWallet)
         }
     }
 
-    stakeAmount = fromBalance - 10000 // fee!
-
-    let minForStakeAccount = (await connection.getMinimumBalanceForRentExemption(web3.StakeProgram.space))
-
-    if (stakeAmount < minForStakeAccount) {
-        console.log(`Not enough lamports for staking, need at least ${minForStakeAccount}`)
-    }
+    stakeAmount = 1000 + minForStakeAccount // stake 1000 lamports
 
     var stakeState
     try {
@@ -102,7 +98,7 @@ async function delegateStaking(mainWallet, stakingWallet, authorisedWallet) {
         stakeState = await connection.getStakeActivation(stakingWallet.publicKey);
     } catch (e) {
         console.log("Staking account does not exist, creating...")
-        createStakeAccount(mainWallet, authorisedWallet, stakingWallet, stakeAmount)
+        await createStakeAccount(mainWallet, authorisedWallet, stakingWallet, stakeAmount)
         stakeState = await connection.getStakeActivation(stakingWallet.publicKey);
     }
     if (stakeState) {
@@ -112,7 +108,7 @@ async function delegateStaking(mainWallet, stakingWallet, authorisedWallet) {
     console.log(`Staking account balance: ${await getBalance(stakingWallet)} lamports`)
     if (stakeState.state == 'inactive') {
         console.log('Delegating staking to first voter in the list')
-        delegateStaking(mainWallet, stakingWallet, authorisedWallet)
+        await delegateStaking(mainWallet, stakingWallet, authorisedWallet)
     }
 
 })();
