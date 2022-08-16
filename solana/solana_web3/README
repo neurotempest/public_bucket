@@ -1,0 +1,19 @@
+Staking SOL in Devnet 
+
+A NodeJS script that stakes Solana in Devnet, based on the official Solana doc at https://docs.solana.com/developing/clients/javascript-reference
+
+
+To stake on Solana, three wallets (address) are required. 
+A wallet for funding, a authorisation wallet, and the staking wallet. 
+If these wallets already exists, the script will load them, and prompt for
+airdrop funding if funding wallet has no SOL stored. 
+After, it will create the staking account in SOL blockchain, if it does not exist, 
+and will try to delegate the staked amount to the firstf validator in the validator list.
+
+Install NodeJS and run
+
+$ node ./
+
+
+TODO
+ - add staking withdrawals

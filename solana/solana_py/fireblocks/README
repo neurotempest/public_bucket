@@ -1,0 +1,4 @@
+First attempt in staking ADA using Python and Fireblocks
+
+- Python Solana libraries do not support staking program, required to create staking account
+    - these scripts are still work-in-progress
