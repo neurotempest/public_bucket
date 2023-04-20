@@ -14,8 +14,8 @@ client = xrpl.clients.JsonRpcClient(testnet_url)
 
 my_payment = xrpl.models.transactions.Payment(
     account=creds_wallet.classic_address,
-    amount=xrpl.utils.xrp_to_drops(890),
-    destination='rHuv8LnNCvfAuCXfeapHMZhqEydgSq7imz',
+    amount=xrpl.utils.xrp_to_drops(950),
+    destination='rJWT8iSmDLBLFBraPdL7322n1cwBjF7aFS',
     destination_tag=0,
 )
 
