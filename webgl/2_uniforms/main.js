@@ -74,3 +74,15 @@ gl.uniform1f(uPointSizeLoc, 45);
 gl.uniform2f(uPositionLoc, 0.2, 0.5);
 
 gl.drawArrays(gl.POINTS, 0, 1);
+
+gl.uniform1i(uIndexLoc, 1);
+gl.uniform1f(uPointSizeLoc, 50);
+gl.uniform2f(uPositionLoc, 0.1, -0.5);
+
+gl.drawArrays(gl.POINTS, 0, 1);
+
+gl.uniform1i(uIndexLoc, 0);
+gl.uniform1f(uPointSizeLoc, 145);
+gl.uniform2f(uPositionLoc, 0.8, -0.5);
+
+gl.drawArrays(gl.POINTS, 0, 1);
