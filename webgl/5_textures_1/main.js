@@ -28,7 +28,7 @@ in vec2 vTexCoord;
 out vec4 fragColor;
 
 void main() {
-  fragColor = texture(uPixelSampler, vTexCoord) * texture(uImageSampler, vTexCoord);
+  fragColor = texture(uImageSampler, vTexCoord);
 }`;
 
 const canvas = document.querySelector('canvas');
