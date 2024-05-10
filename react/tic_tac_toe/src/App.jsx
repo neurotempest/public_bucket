@@ -22,7 +22,7 @@ export default function Game() {
         <Board xIsNext={xIsNext} boardState={currentBoardState} handlePlay={handlePlay}/>
       </div>
       <div className="game-history">
-        <ol>{/*tofo*/}</ol>
+        <ol>{/*todo*/}</ol>
       </div>
     </div>
   )
