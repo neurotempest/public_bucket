@@ -74,3 +74,19 @@ describe("App", () => {
   })
 })
 ```
+
+* Note on suporting `css` imports;
+  * Webpack (specifically css-loader/ts-loader/babel) passes the ts+css to make valid ts/js
+  * We need to mock this behaviour in jest
+  * One solution is just to ~ignore~ nullify all css imports:
+    * Add a module overide to jest config:
+```
+  moduleNameMapper: {
+    "\\.css$": "<rootDir>/__mocks__/style_mock.js",
+  },
+```
+    * Define the `style_mock.js` file:
+```
+module.exports = {};
+```
+  * see https://stackoverflow.com/questions/39641068/jest-trying-to-parse-css
