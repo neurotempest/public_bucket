@@ -34,3 +34,43 @@ dist/
 * add `src/someLib.ts`:
 * add `test/someLib.spec.ts`:
 * add `jest.config.ts`:
+
+
+### Adding support for testing react components:
+
+* yarn add react testing lib: `yarn add @testing-library/react --dev`
+
+* yarn add some other libs required by jest:
+```
+yarn add @testing-library/dom jest-environment-jsdom --dev
+```
+
+* At the top of all test files which will test a react component we need to change the jest test enviroment to jsdom (i.e. browser-like test env)
+    * See: https://stackoverflow.com/questions/69227566/consider-using-the-jsdom-test-environment
+    * And https://jestjs.io/docs/configuration#testenvironment-string
+  * Otherwise the test will fail. (THis can also be done for the whole project in the jest config - however not if the testshave a mix of UI and non-UI test files
+  * To do this add the following doc-block as a head to each file:
+```
+/**
+ * @jest-environment jsdom
+ */
+
+```
+
+* Add an actual test file - e.g. `./test/App.spec.tsx`
+```
+/**
+ * @jest-environment jsdom
+ */
+import { render, screen } from '@testing-library/react';
+
+
+import Form from "../src/App"
+
+describe("App", () => {
+  it("does something", () => {
+    render(<Form />)
+    screen.debug()
+  })
+})
+```
