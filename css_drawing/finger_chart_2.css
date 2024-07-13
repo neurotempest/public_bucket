@@ -1,0 +1,101 @@
+
+.guitarFingerChart {
+
+
+  --left-pad: 10px;
+  --fret-label-height: 50px;
+
+
+  --num-frets: 5;
+  --num-strings: 6;
+
+
+  --fret-space: 38px;
+  --fret-img-width: 2px;
+  --fret-marker-width: 20px;
+  --string-space: 38px;
+  --string-img-width: 2px;
+
+  --note-dot-width: 20px;
+
+  display: grid;
+  grid-template-columns: var(--left-pad) calc(var(--num-frets)*(var(--fret-img-width)+var(--fret-space)));;
+  grid-template-rows: var(--fret-label-height) auto;
+}
+
+.guitarFingerChart .body {
+  position: relative;
+  grid-row: 2;
+  grid-column: 2;
+
+  display: grid;
+  grid-template-columns: repeat(var(--num-frets), var(--fret-img-width) var(--fret-space)) var(--fret-img-width);
+  grid-template-rows: repeat(var(--num-strings), var(--string-space));
+
+  width: calc(var(--num-frets) * (var(--fret-img-width) + var(--fret-space)) + var(--fret-img-width));
+}
+
+.guitarFingerChart .body .note {
+  --fret: 0;
+  --string: 1;
+
+  grid-row: var(--string);
+  grid-column: calc(2*var(--fret));
+
+  display: flex;
+  margin: auto;
+  background-color: red;
+  height: var(--note-dot-width);
+  width: var(--note-dot-width);
+  border-radius: 100%;
+  z-index: 5;
+}
+
+.guitarFingerChart .body .fret {
+  --pos: 0;
+
+  grid-column: calc(1 + 2 * var(--fret));
+  grid-row:1/-1;
+  background-color: black;
+  width: 100%;
+  height: 100%;
+}
+
+.guitarFingerChart .body .string {
+  --num: 1;
+
+  top: calc((var(--num) - 1)*var(--string-space) + var(--string-space)/2);
+
+  position: absolute;
+  background-color: black;
+  width: 100%;
+  height: var(--string-img-width);
+  z-index: 1;
+}
+
+.guitarFingerChart .body .fretMarker {
+  --fret: 1;
+
+  grid-column: calc(2*var(--fret));
+  grid-row: 1;
+
+  display: flex;
+  margin: auto;
+  background-color: grey;
+  height: var(--fret-marker-width);
+  width: var(--fret-marker-width);
+  border-radius: 100%;
+}
+
+.guitarFingerChart .body .fretMarkerTop {
+  margin-top: calc(var(--string-space)*2 - var(--fret-marker-width)/2);
+}
+
+.guitarFingerChart .body .fretMarkerBottom {
+  margin-top: calc(var(--string-space)*((var(--num-strings) - 2)) - var(--fret-marker-width)/2);
+}
+
+.guitarFingerChart .body .fretMarkerMiddle {
+  margin-top: calc((var(--num-strings)*var(--string-space) - var(--fret-marker-width))/2);
+}
+
