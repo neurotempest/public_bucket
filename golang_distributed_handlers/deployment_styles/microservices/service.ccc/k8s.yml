@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service.ccc
+  labels:
+    app: service.ccc
+spec:
+  hostNetwork: true
+  selector:
+    matchLabels:
+      app: service.ccc
+  template:
+    metadata:
+      labels:
+        app: service.ccc
+    spec:
+      containers:
+        - name: service.ccc
+          image: service.ccc-image
+          command:
+            #- /bin/sh
+            #- -c
+            #- sleep infinity
+            - /build/service.ccc_main
+            #- -db_uri=consumer:@tcp(mysql-server:3306)/consumer_db?parseTime=true
+            #- -producer_grpc_address=producer-api:1234
+          ports:
+            - containerPort: 1234
+

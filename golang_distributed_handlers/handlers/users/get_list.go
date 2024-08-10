@@ -1,16 +1,15 @@
-package user
-
+package users
 
 import (
-	usertypes "github.com/thecodedproject/publicbucket/golang_distributed_handlers/handlers/user/types"
+	"context"
+
+	usertypes "github.com/neurotempest/public_bucket/golang_distributed_handlers/handlers/users/types"
 )
 
 
 func GETList(ctx context.Context, req usertypes.GETListRequest) (usertypes.GETListResponse, error) {
 
-	log.Println("GET users/list: received request:", req)
-
-	return usertypes.GETUserResponse{
+	return usertypes.GETListResponse{
 		Users: []usertypes.User{
 			{
 				FirstName: "A",
@@ -21,5 +20,5 @@ func GETList(ctx context.Context, req usertypes.GETListRequest) (usertypes.GETLi
 				LastName: "Bb",
 			},
 		},
-	}
+	}, nil
 }

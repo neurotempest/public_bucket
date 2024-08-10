@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service.aaa
+  labels:
+    app: service.aaa
+spec:
+  hostNetwork: true
+  selector:
+    matchLabels:
+      app: service.aaa
+  template:
+    metadata:
+      labels:
+        app: service.aaa
+    spec:
+      containers:
+        - name: service.aaa
+          image: service.aaa-image
+          command:
+            #- /bin/sh
+            #- -c
+            #- sleep infinity
+            - /build/service.aaa_main
+            #- -db_uri=consumer:@tcp(mysql-server:3306)/consumer_db?parseTime=true
+            #- -producer_grpc_address=producer-api:1234
+          ports:
+            - containerPort: 1234
+

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: monolith-api
+spec:
+  type: ClusterIP
+  selector:
+    app: servicea
+  ports:
+    - port: 1234
+      targetPort: 1234
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: servicea
+  labels:
+    app: servicea
+spec:
+  hostNetwork: true
+  selector:
+    matchLabels:
+      app: servicea
+  template:
+    metadata:
+      labels:
+        app: servicea
+    spec:
+      containers:
+        - name: servicea
+          image: servicea-image
+          command:
+            #- /bin/sh
+            #- -c
+            #- sleep infinity
+            - /build/servicea_main
+            #- -db_uri=consumer:@tcp(mysql-server:3306)/consumer_db?parseTime=true
+            #- -producer_grpc_address=producer-api:1234
+          ports:
+            - containerPort: 1234
+

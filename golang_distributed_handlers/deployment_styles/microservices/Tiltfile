@@ -1,0 +1,36 @@
+# -*- mode: Python -*-
+
+services = [
+	'service.aaa',
+	'service.bbb',
+	'service.ccc',
+]
+
+k8s_yaml('./restapi.k8s.yml')
+
+for service in services:
+
+  local_resource(
+    '{0}-go-compile'.format(service),
+    'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./{0}/build/{0}_main ./{0}'.format(service),
+    #deps=['./{0}/'.format(service)],
+    labels=['go-compile'],
+  )
+
+  docker_build(
+    ref='{0}-image'.format(service),
+    context='./{0}'.format(service),
+    dockerfile='./Dockerfile'.format(service),
+  )
+
+  k8s_yaml('./{0}/k8s.yml'.format(service))
+  k8s_resource(
+    service,
+    resource_deps=[
+      '{0}-go-compile'.format(service),
+    ],
+    labels=['services'],
+    port_forwards=[
+      port_forward(1234, name="REST API", host="localhost"),
+    ],
+  )
