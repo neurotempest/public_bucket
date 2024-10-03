@@ -1,14 +1,24 @@
 # -*- mode: Python -*-
 
 services = [
-	'service.aaa',
-	'service.bbb',
-	'service.ccc',
+	{
+    'service': 'service.aaa',
+    'bind-port': 1230,
+  },
+	{
+    'service': 'service.bbb',
+    'bind-port': 1235,
+  },
+	#{
+  #  'service': 'service.ccc',
+  #  'bind-port': 1236,
+  #},
 ]
 
-k8s_yaml('./restapi.k8s.yml')
 
-for service in services:
+for serviceDef in services:
+
+  service = serviceDef['service']
 
   local_resource(
     '{0}-go-compile'.format(service),
@@ -25,12 +35,12 @@ for service in services:
 
   k8s_yaml('./{0}/k8s.yml'.format(service))
   k8s_resource(
-    service,
+    '{0}'.format(service.replace('.', '-')),
     resource_deps=[
       '{0}-go-compile'.format(service),
     ],
     labels=['services'],
     port_forwards=[
-      port_forward(1234, name="REST API", host="localhost"),
+      port_forward(local_port=serviceDef['bind-port'], container_port=serviceDef['bind-port'], name="REST API", host="localhost"),
     ],
   )

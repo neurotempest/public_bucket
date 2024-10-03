@@ -1,27 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-aaa-api
+spec:
+  selector:
+    app: service-aaa
+  ports:
+    - name: rest-api
+      port: 1230
+      targetPort: 1234
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service.aaa
+  name: service-aaa
   labels:
-    app: service.aaa
+    app: service-aaa
 spec:
   hostNetwork: true
   selector:
     matchLabels:
-      app: service.aaa
+      app: service-aaa
   template:
     metadata:
       labels:
-        app: service.aaa
+        app: service-aaa
     spec:
       containers:
-        - name: service.aaa
+        - name: service-aaa
           image: service.aaa-image
           command:
             #- /bin/sh
             #- -c
             #- sleep infinity
             - /build/service.aaa_main
+            - -api_port=1234
             #- -db_uri=consumer:@tcp(mysql-server:3306)/consumer_db?parseTime=true
             #- -producer_grpc_address=producer-api:1234
           ports:

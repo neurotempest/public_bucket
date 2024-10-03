@@ -9,8 +9,10 @@ require (
 	github.com/ethereum/go-ethereum v1.10.9
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/shopspring/decimal v1.3.1
-	github.com/stretchr/testify v1.8.2
-	github.com/thecodedproject/sqltest v0.0.0-20230516180504-ccb0a95d2337
+	github.com/stretchr/testify v1.8.3
+	github.com/thecodedproject/dbcrudgen v0.0.0-20240916100433-b9bccd49ce95
+	github.com/thecodedproject/gotest v0.0.0-20230703140753-332ed632c616
+	github.com/thecodedproject/sqltest v0.0.0-20230808195109-2bfee2b61c18
 	golang.org/x/tools v0.1.0
 )
 

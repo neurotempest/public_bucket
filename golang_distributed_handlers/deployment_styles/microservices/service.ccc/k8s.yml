@@ -1,21 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-ccc-api
+spec:
+  type: ClusterIP
+  selector:
+    app: service-ccc
+  ports:
+    - port: 1236
+      targetPort: 1234
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service.ccc
+  name: service-ccc
   labels:
-    app: service.ccc
+    app: service-ccc
 spec:
   hostNetwork: true
   selector:
     matchLabels:
-      app: service.ccc
+      app: service-ccc
   template:
     metadata:
       labels:
-        app: service.ccc
+        app: service-ccc
     spec:
       containers:
-        - name: service.ccc
+        - name: service-ccc
           image: service.ccc-image
           command:
             #- /bin/sh

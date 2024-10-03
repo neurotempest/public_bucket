@@ -1,21 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-bbb-api
+spec:
+  type: ClusterIP
+  selector:
+    app: service-bbb
+  ports:
+    - port: 1235
+      targetPort: 1234
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service.bbb
+  name: service-bbb
   labels:
-    app: service.bbb
+    app: service-bbb
 spec:
   hostNetwork: true
   selector:
     matchLabels:
-      app: service.bbb
+      app: service-bbb
   template:
     metadata:
       labels:
-        app: service.bbb
+        app: service-bbb
     spec:
       containers:
-        - name: service.bbb
+        - name: service-bbb
           image: service.bbb-image
           command:
             #- /bin/sh
